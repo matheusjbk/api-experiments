@@ -1,0 +1,32 @@
+{
+  "name": "api-experiments",
+  "version": "1.0.0",
+  "description": "Primeiros experimentos no desenvolvimento de API's usando Node.js e MySQL.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matheusjbk/api-experiments.git"
+  },
+  "keywords": [
+    "API",
+    "REST",
+    "JSON",
+    "Node.js",
+    "MySQL",
+    "CRUD",
+    "API",
+    "HTTP"
+  ],
+  "author": "Matheus Keher",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/matheusjbk/api-experiments/issues"
+  },
+  "homepage": "https://github.com/matheusjbk/api-experiments#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
