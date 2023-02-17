@@ -1,36 +1,110 @@
-const express = require('express')
-const app = express()
-
+// Importa a biblioteca "Express".
+const express = require('express');
+// Armazena o conteúdo da biblioteca "Express" na constante "app".
+const app = express();
+// Importa a biblioteca "dotenv".
 const conf = require('dotenv').config().parsed;
-
 // console.log(conf);
+
+// Importa a biblioteca "MySQL".
+const mysql = require('mysql2');
+
+// Faz a conexão com o servidor.
+const conn = mysql.createPool({
+    host: conf.HOSTNAME,
+    user: conf.USERNAME,
+    database: conf.DATABASE,
+    password: conf.PASSWORD,
+    port: conf.PASSWORD
+}).promise();
 
 const port = conf.HTTPPORT;
 
 // Objeto que será executado quando houver uma requisição.
 const thing = {
   getAll: async (req, res) => {
-    res.json({"req": req.method, "status": "ok"});
+    try {
+        // Query que obtém os dados do banco de dados.
+        const sql = "SELECT *, DATE_FORMAT(tdate, '%d/%m/%Y às %H:%i') AS tdatebr FROM things WHERE tstatus = 'on' ORDER BY tdate DESC";
+        const [rows] = await conn.query(sql);
+
+        // View de dados.
+        res.json({data: rows});
+    } catch (error) {
+        //Exibe mensagem de erro.
+        res.json({status: "error", message: error});
+    }
   },
 
   getOne: async (req, res) => {
-    const id = req.params.id;
-    res.json({"req": req.method, "id": id, "status": "ok"});
+    try {
+        // ID da requisição.
+        const id = req.params.id;
+
+        // Query que obtém um dado do banco de dados.
+        const sql = "SELECT *, DATE_FORMAT(tdate, '%d/%m/%Y às %H:%i') AS tdatebr FROM things WHERE tid = ? AND tstatus = 'on' ORDER BY tdate DESC";
+        const [rows] = await conn.query(sql, [id]);
+
+        // View de dados.
+        res.json({data: rows});        
+    } catch (error) {
+        //Exibe mensagem de erro.
+        res.json({status: "error", message: error});
+    }
   },
 
   post: async (req, res) => {
-    const id = req.params.id;
-    res.json({"req": req.method, "id": id, "body": req.body, "status": "ok"});
+    try {
+        // Extrai os campos do req.body.
+        const {user, name, photo, description, location, options} = req.body;
+
+        // Query de inserção do registro.
+        const sql = "INSERT INTO things (tuser, tname, tphoto, tdescription, tlocation, toptions) VALUES (?, ?, ?, ?, ?, ?)";
+        const [rows] = await conn.query(sql, [user, name, photo, description, location, options]);
+
+        // View de dados.
+        res.json({id: rows.insertId, status: "success"});
+    } catch (error) {
+        //Exibe mensagem de erro.
+        res.json({status: "error", message: error});
+    }
   },
 
   put: async (req, res) => {
-    const id = req.params.id;
-    res.json({"req": req.method, "id": id, "body": req.body, "status": "ok"});
+    try {
+        // ID da requisição.
+        const id = req.params.id;
+
+        // Extrai os campos do req.body.
+        const {user, name, photo, description, location, options} = req.body;
+
+        // Query que atualiza o registro.
+        const sql = "UPDATE things SET tuser = ?, tname = ?, tphoto = ?, tdescription = ?, tlocation = ?, toptions = ? WHERE tid = ?";
+        const [rows] = await conn.query(sql, [user, name, photo, description, location, options, id]);
+
+        // View de feedback.
+        res.json({id: id, status: "success"});
+    } catch (error) {
+        //Exibe mensagem de erro.
+        res.json({status: "error", message: error});
+    }
   },
 
   delete: async (req, res) => {
-    const id = req.params.id;
-    res.json({"req": req.method, "id": id, "status": "ok"});
+    try {
+        // ID da requisição.
+        const id = req.params.id;
+
+        //Query que muda o status para "del".
+        const sql = "UPDATE things SET tstatus = 'del' WHERE tid = ?";
+        const [rows] = await conn.query(sql, [id]);
+
+        // View de feedback.
+        res.json({id: id, status: "success"});
+    } catch (error) {
+        //Exibe mensagem de erro.
+        res.json({status: "error", message: error});
+    }
   }
 }
 
@@ -73,6 +147,7 @@ app.put('/:id', bodyParser, thing.put);
 
 // Rotas para o usuário
 app.get('/user/:id', user.getOne);
+app.post('/user/', user.post);
 app.put('/user/:id', user.put);
 app.delete('/user/:id', user.delete);
 
