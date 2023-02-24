@@ -1,5 +1,4 @@
 // Importa conector do banco de dados.
-import e from "express";
 import conn from "../model/mysql";
 
 // Objeto que será executado quando ocorrer uma requisição HTTP para a entidade "users".
