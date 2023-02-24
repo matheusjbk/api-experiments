@@ -11,7 +11,7 @@ const conf = dotenv.config().parsed;
 const port = conf.HTTPPORT || 3000;
 
 // Configuração do nome do aplicativo.
-import appRouter from "./controller/routes";
+import appRouter from "./controller/routes.js";
 
 // Inicia o monitoramento das rotas.
 app.use(appRouter);

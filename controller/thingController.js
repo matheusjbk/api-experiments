@@ -1,5 +1,5 @@
 // Importa conector do banco de dados.
-import conn from "../model/mysql";
+import conn from "../model/mysql.js";
 
 // Objeto que será executado quando ocorrer uma requisição HTTP para a entidade "things".
 const thingController = {

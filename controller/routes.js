@@ -17,7 +17,7 @@ router.get("/", (req, res) => {
 });
 
 // Carrega o controller de "things".
-import thingController from "../controller/thingController";
+import thingController from "../controller/thingController.js";
 
 // Rota para GET, retornando todos os registros.
 router.get("/thing/", thingController.getAll);
@@ -35,7 +35,7 @@ router.post("/thing/", bodyParsed, thingController.post);
 router.put("/thing/:id", bodyParsed, thingController.put);
 
 // Carrega o controller de "users".
-import userController from "../controller/userController";
+import userController from "../controller/userController.js";
 
 // Rotas para o usuário.
 // Rota para GET, retornando todos os registros.
@@ -52,3 +52,5 @@ router.post("/user/", bodyParsed, userController.post);
 
 // Rota para PUT, atualizando um registro da tabela. bodyParsed (no hook) é utilizado para garantir a chegada de um JSON.
 router.put("/user/:id", bodyParsed, userController.put);
+
+export default router;
